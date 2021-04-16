@@ -22,6 +22,7 @@ public class MyFrameTank extends JFrame {
     private int n=7;
     private ArrayList<SpiritTank> enemyTank=new ArrayList<SpiritTank>();
     private PlayerTank myTank;
+    static public int[][] TankPlant= {{100,100},{350,100},{600,100}};
     
 	public MyFrameTank(String string) {
 		// TODO Auto-generated constructor stub
@@ -29,15 +30,19 @@ public class MyFrameTank extends JFrame {
 		//setBackground(Color.pink);
 		setSize(ConVal.WEDTH,ConVal.HEIGHT);//设置窗体的宽和高
 		
-		myTank = new PlayerTank(50,50,1,2); //0号坦克可以通过上下左右来控制
+		myTank = new PlayerTank(50,50,2,2); //0号坦克可以通过上下左右来控制
+		//myTank.setStyle(2);
 		//myTank.setStyle(1);     //frome 0
 		//myTank.setDir(2);		//0 for shang,1 for you,2 forxia,3 forzuo
 		
 		//Iterator<Tank> it=enemyTank.iterator();
-		for(int i=0;i<n;i++) {
-			enemyTank.add(new SpiritTank(100+i*50,100,2,2));
-			System.out.print("chuangzhao");
-		}
+//		for(int i=0;i<3;i++) {
+//			for(int j=0;j<n/3;j++) {
+//				enemyTank.add(new SpiritTank(TankPlant[i][0],TankPlant[i][1],5,2));
+//				System.out.print("chuangzhao");
+//			}
+//			
+//		}
 		
 //		enemyTank[0] = new Tank(100,100);//1号坦克每过0.5秒随机转变方向，并一直移动
 //		enemyTank[0].setStyle(0);     
@@ -78,13 +83,24 @@ public class MyFrameTank extends JFrame {
             //获得截取图片的画布
             gOffScreen = offScreenImage.getGraphics();  
         }
-        super.paint(gOffScreen); 
+        
+        
+        
         //清除屏幕        
         //Color c = gOffScreen.getColor();  
+        //super.paint(gOffScreen); 
+        super.paint(gOffScreen); 
         gOffScreen.setColor(Color.pink);  
         gOffScreen.fillRect(0, 0, ConVal.WEDTH,ConVal.HEIGHT);  
         //gOffScreen.setColor(c);
         // 调用父类的重绘方法，防止再从最底层来重绘
+        
+        
+        gOffScreen.setColor(Color.white);
+        for(int i=0;i<3;i++) {
+        	gOffScreen.drawRect(TankPlant[i][0], TankPlant[i][1], 34, 34);
+        }
+        
         
         //绘制所有游戏对象	      
         	myTank.paint(gOffScreen);  	

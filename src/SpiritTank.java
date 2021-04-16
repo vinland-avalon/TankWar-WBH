@@ -7,10 +7,10 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 
 public class SpiritTank extends Tank{
-	public int x,y,style;
-	public Image img;
+	//public int x,y,style;
+	//public Image img;
 	//public File f;
-	public int dir;
+	//public int dir;
 	private int frameCount=0;
 	
 	public SpiritTank(int _x,int _y) {
@@ -20,11 +20,10 @@ public class SpiritTank extends Tank{
 		super(_x,_y,_style,_dir);
 	}
 
-	//移动，每次一格
 	public void randomMove() 
 	{ 
 		move();
-		System.out.println(getDir());
+		//System.out.println(getDir());
 		frameCount++;
 		if(frameCount%20==0) {
 			randomTurn();
