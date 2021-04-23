@@ -7,10 +7,12 @@ import java.util.Vector;
 
 public class EnemyRunnable implements Runnable{
 
-	private ArrayList<SpiritTank> t;
+	private Vector<SpiritTank> t;
+	private Vector<Bullet> bullets;
 	//private int num;
-	public EnemyRunnable(ArrayList<SpiritTank> _t){
+	public EnemyRunnable(Vector<SpiritTank> _t,Vector<Bullet> _bullets){
 		t=_t; 
+		bullets=_bullets;
 	}
 		
 		@Override
@@ -45,9 +47,13 @@ public class EnemyRunnable implements Runnable{
 					}
 					createTime++;
 					if(createTime>=10) {
+						for(SpiritTank tank:t) {
+							bullets.add(tank.fire());
+						}
+						
 						if(rd.nextInt(2)==1) {
 							int pt=rd.nextInt(3);
-							atank=new SpiritTank(MyFrameTank.TankPlant[pt][0],MyFrameTank.TankPlant[pt][1],4,2);
+							atank=new SpiritTank(MyFrameTank.TankPlant[pt][0],MyFrameTank.TankPlant[pt][1],4,2,bullets);
 							t.add(atank);
 						}
 						createTime=0;

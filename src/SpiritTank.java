@@ -3,21 +3,23 @@ import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
+import java.util.Vector;
 
 import javax.imageio.ImageIO;
 
 public class SpiritTank extends Tank{
-	//public int x,y,style;
-	//public Image img;
-	//public File f;
-	//public int dir;
-	private int frameCount=0;
 	
-	public SpiritTank(int _x,int _y) {
+	private int frameCount=0;
+	private Vector<Bullet> bullets;
+	
+	
+	public SpiritTank(int _x,int _y,Vector<Bullet> _bullets) {
 		super(_x,_y);
+		bullets=_bullets;
 	}
-	public SpiritTank(int _x,int _y,int _style,int _dir) {
+	public SpiritTank(int _x,int _y,int _style,int _dir,Vector<Bullet> _bullets) {
 		super(_x,_y,_style,_dir);
+		bullets=_bullets;
 	}
 
 	public void randomMove() 
