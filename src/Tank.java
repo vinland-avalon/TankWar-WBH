@@ -82,7 +82,7 @@ public class Tank {
 	}
 	
 	public Bullet fire() {
-		return new Bullet(x,y,dir);
+		return new Bullet(x+8,y+8,dir);
 	}
 	
 

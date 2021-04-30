@@ -6,6 +6,7 @@ import java.util.Vector;
 public class PlayerTank extends Tank implements KeyListener{
 	
 	private Vector<Bullet> bullets;
+	private Boolean life=true;
 
 	public PlayerTank(int _x,int _y,int _style,int _dir,Vector<Bullet> _bullets) {
 		super(_x, _y, _style, _dir);
@@ -13,6 +14,8 @@ public class PlayerTank extends Tank implements KeyListener{
 		//bullets=new Vector<Bullet>();
 		// TODO Auto-generated constructor stub
 	}
+	public void dead() {life=false;}
+	public Boolean ifLife() {return life;}
 	
 	//对键盘的监听器 上右下左  重写函数
 	

@@ -20,11 +20,11 @@ public class MyFrameTank extends JFrame {
 	//双缓冲技术，消除频闪  
     private Image offScreenImage = null;      //声明一个新的Image对象，即第二缓存
     private Graphics gOffScreen = null;
-    private int n=7;
     private Vector<SpiritTank> enemyTank=new Vector<SpiritTank>();
     private PlayerTank myTank;
     static public int[][] TankPlant= {{100,100},{350,100},{600,100}};
     private Vector<Bullet> bullets=new Vector<Bullet>();
+    private Map map;
     
     
 	public MyFrameTank(String string) {
@@ -34,7 +34,9 @@ public class MyFrameTank extends JFrame {
 		setSize(ConVal.WEDTH,ConVal.HEIGHT);//设置窗体的宽和高
 		
 		myTank = new PlayerTank(50,50,2,2,bullets); //0号坦克可以通过上下左右来控制
-		myTank.setV(2);
+		myTank.setV(4);
+		
+		map=new Map();
 	
 		
 		this.addKeyListener(myTank);
@@ -46,7 +48,7 @@ public class MyFrameTank extends JFrame {
 		Random rd=new Random();
 		int createTime=0;
 		int shotTime=rd.nextInt(15);
-		
+		//双方坦克移动
 		for(int i=0;;i++) {			
 			myTank.move();  //tank 0 moves
 			
@@ -54,7 +56,7 @@ public class MyFrameTank extends JFrame {
 				tank.randomMove();
 			}
 			createTime++;
-			
+			//敌人坦克发射炮弹
 			shotTime++;
 			if(shotTime>30) {
 				for(SpiritTank tank:enemyTank) {
@@ -69,7 +71,7 @@ public class MyFrameTank extends JFrame {
 				shotTime=0;
 			}
 			
-			
+			//新出产坦克
 			if(createTime>=20) {
 				if(rd.nextInt(2)==1) {
 					int pt=rd.nextInt(3);
@@ -78,18 +80,39 @@ public class MyFrameTank extends JFrame {
 				}
 				createTime=0;
 			}
+			//删除炮弹
 			for(int i2=0;i2<bullets.size();i2++) if(bullets.get(i2).checkNo()) {bullets.removeElementAt(i2);}
+			//删除墙
+			for(int i2=0;i2<map.getWalls().size();i2++) {
+				if(!map.getWalls().get(i2).getIfLife())map.getWalls().remove(i2);
+			}
+			//处理我的炮弹
 			for(int i2=0;i2<bullets.size();i2++) {
-				
+				//子弹爆炸
 				bullets.get(i2).move();
+				for(Wall w:map.getWalls()) {
+					if(w.getX()+17>bullets.get(i2).getX()&&w.getX()<bullets.get(i2).getX()&&w.getY()+17>bullets.get(i2).getY()&&w.getY()<bullets.get(i2).getY()) {
+						bullets.get(i2).explode();
+						w.disappear();
+					}
+				}
 				for(int i1=0;i1<enemyTank.size();i1++) {
-					if(bullets.get(i2).getIfMy()&&bullets.get(i2).getX()<enemyTank.get(i1).getX()+17&&bullets.get(i2).getX()>enemyTank.get(i1).getX()-17&&bullets.get(i2).getY()<enemyTank.get(i1).getY()+17&&bullets.get(i2).getY()>enemyTank.get(i1).getY()-17) {
+					if(!bullets.get(i2).checkNo()&&bullets.get(i2).getIfMy()&&bullets.get(i2).getX()<enemyTank.get(i1).getX()+17&&bullets.get(i2).getX()>enemyTank.get(i1).getX()-17&&bullets.get(i2).getY()<enemyTank.get(i1).getY()+17&&bullets.get(i2).getY()>enemyTank.get(i1).getY()-17) {
 						bullets.get(i2).explode();
 						enemyTank.removeElementAt(i1);
 						//bullets.remove(b);
 					}
 				}
 			}
+			//处理敌人炮弹
+			for(Bullet b:bullets) {
+				if(!b.checkNo()&&!b.getIfMy()&&b.getX()<myTank.getX()+17&&b.getX()>myTank.getX()-17&&b.getY()<myTank.getY()+17&&b.getY()>myTank.getY()-17) {
+					myTank.dead();
+					b.explode();
+					//System.exit(1);
+				}
+			}
+			
 			repaint();
 			try {
 				Thread.sleep(100);
@@ -109,14 +132,9 @@ public class MyFrameTank extends JFrame {
             //获得截取图片的画布
             gOffScreen = offScreenImage.getGraphics();  
         }
-        
-        
-        
-        //清除屏幕        
-        //Color c = gOffScreen.getColor();  
-        //super.paint(gOffScreen); 
+         
         super.paint(gOffScreen); 
-        gOffScreen.setColor(Color.pink);  
+        gOffScreen.setColor(Color.black);  
         gOffScreen.fillRect(0, 0, ConVal.WEDTH,ConVal.HEIGHT);  
         //gOffScreen.setColor(c);
         // 调用父类的重绘方法，防止再从最底层来重绘
@@ -132,7 +150,7 @@ public class MyFrameTank extends JFrame {
         
         
         //绘制所有游戏对象	      
-        	myTank.paint(gOffScreen);  	
+        	if(myTank.ifLife())myTank.paint(gOffScreen);  	
         	//Iterator<Tank> it=enemyTank.iterator();
          	for(int j=0;j<enemyTank.size();j++) {
         		enemyTank.get(j).paint(gOffScreen);
@@ -140,6 +158,10 @@ public class MyFrameTank extends JFrame {
          	for(Bullet b:bullets) {
 				b.paint(gOffScreen);
 			}
+         	map.paint(gOffScreen);
+         	if(!myTank.ifLife()) {
+         		gOffScreen.drawImage(ConVal.IMG, ConVal.WEDTH/2, ConVal.HEIGHT/2,ConVal.WEDTH/2+136, ConVal.HEIGHT/2+68, 4*34, 4*34, 6*34, 5*34, null);
+         	}
         //将第二绘存中的内容一次性全部绘制到屏幕
         g.drawImage(offScreenImage, 0, 0, null);
 
