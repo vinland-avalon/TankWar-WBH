@@ -74,7 +74,9 @@ public class Tank {
 		
 		switch(dir) 
 		{
-			case 0: y-=v; break;
+			case 0: 
+				y-=v; 
+				break;
 			case 1: x+=v; break;
 			case 2: y+=v; break;
 			case 3: x-=v; break;

@@ -42,7 +42,7 @@ public class Bullet {
 	
 	
 	public void paint(Graphics g) {
-			if(no) g.drawImage(ConVal.IMG, x, y,x+34, y+34, 20*34, 4*34, 21*34, 5*34,null);
+			if(no) g.drawImage(ConVal.IMG, x-8, y-8,x+34-8, y+34-8, 20*34, 4*34, 21*34, 5*34,null);
 			else if(ifMy) g.drawImage(ConVal.IMG, x, y,x+17, y+17, 5*34+8, 6*34+8, 6*34-8, 7*34-8,null);
 			else g.drawImage(ConVal.IMG, x, y,x+17, y+17, 6*34+8, 6*34+8, 7*34-8, 7*34-8,null);
 

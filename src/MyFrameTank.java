@@ -97,7 +97,7 @@ public class MyFrameTank extends JFrame {
 					}
 				}
 				for(int i1=0;i1<enemyTank.size();i1++) {
-					if(!bullets.get(i2).checkNo()&&bullets.get(i2).getIfMy()&&bullets.get(i2).getX()<enemyTank.get(i1).getX()+17&&bullets.get(i2).getX()>enemyTank.get(i1).getX()-17&&bullets.get(i2).getY()<enemyTank.get(i1).getY()+17&&bullets.get(i2).getY()>enemyTank.get(i1).getY()-17) {
+					if(!bullets.get(i2).checkNo()&&bullets.get(i2).getIfMy()&&bullets.get(i2).getX()<enemyTank.get(i1).getX()+51&&bullets.get(i2).getX()>enemyTank.get(i1).getX()-17&&bullets.get(i2).getY()<enemyTank.get(i1).getY()+51&&bullets.get(i2).getY()>enemyTank.get(i1).getY()-17) {
 						bullets.get(i2).explode();
 						enemyTank.removeElementAt(i1);
 						//bullets.remove(b);
@@ -106,7 +106,7 @@ public class MyFrameTank extends JFrame {
 			}
 			//¥¶¿Ìµ–»À≈⁄µØ
 			for(Bullet b:bullets) {
-				if(!b.checkNo()&&!b.getIfMy()&&b.getX()<myTank.getX()+17&&b.getX()>myTank.getX()-17&&b.getY()<myTank.getY()+17&&b.getY()>myTank.getY()-17) {
+				if(!b.checkNo()&&!b.getIfMy()&&b.getX()<myTank.getX()+51&&b.getX()>myTank.getX()-17&&b.getY()<myTank.getY()+51&&b.getY()>myTank.getY()-17) {
 					myTank.dead();
 					b.explode();
 					//System.exit(1);
