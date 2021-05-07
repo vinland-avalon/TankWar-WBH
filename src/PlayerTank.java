@@ -11,7 +11,8 @@ public class PlayerTank extends Tank implements KeyListener{
 	public PlayerTank(int _x,int _y,int _style,int _dir,Vector<Bullet> _bullets) {
 		super(_x, _y, _style, _dir);
 		bullets=_bullets;
-		//bullets=new Vector<Bullet>();
+		//bullets=new Vector<Bullet>();\
+		
 		// TODO Auto-generated constructor stub
 	}
 	public void dead() {life=false;}

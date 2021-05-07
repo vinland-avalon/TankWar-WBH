@@ -91,11 +91,6 @@ public class Tank {
 	
 	//将该块图像用g来绘制
 	public void paint(Graphics g) {
-		
-		
-			
-			
-		
 		frameCount++;
 		
 		if(frameCount%2==0) {

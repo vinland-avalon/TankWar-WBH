@@ -25,6 +25,8 @@ public class MyFrameTank extends JFrame {
     static public int[][] TankPlant= {{100,100},{350,100},{600,100}};
     private Vector<Bullet> bullets=new Vector<Bullet>();
     private Map map;
+    private Vector<Explosion> exps;
+    //private Explosion exp;
     
     
 	public MyFrameTank(String string) {
@@ -34,10 +36,10 @@ public class MyFrameTank extends JFrame {
 		setSize(ConVal.WEDTH,ConVal.HEIGHT);//设置窗体的宽和高
 		
 		myTank = new PlayerTank(50,50,2,2,bullets); //0号坦克可以通过上下左右来控制
-		myTank.setV(4);
+		myTank.setV(8);
 		
 		map=new Map();
-	
+		exps=new Vector<Explosion>();
 		
 		this.addKeyListener(myTank);
 		
@@ -64,9 +66,7 @@ public class MyFrameTank extends JFrame {
 						Bullet bullet=tank.fire();
 						bullet.setIfMy(false);
 						bullets.add(bullet);
-					}
-					
-						
+					}	
 				}
 				shotTime=0;
 			}
@@ -86,18 +86,22 @@ public class MyFrameTank extends JFrame {
 			for(int i2=0;i2<map.getWalls().size();i2++) {
 				if(!map.getWalls().get(i2).getIfLife())map.getWalls().remove(i2);
 			}
+			//删除烟花
+			for(int j=exps.size()-1;j>=0;j--) if(exps.get(j).isOver()) exps.remove(j);
 			//处理我的炮弹
 			for(int i2=0;i2<bullets.size();i2++) {
 				//子弹爆炸
 				bullets.get(i2).move();
 				for(Wall w:map.getWalls()) {
 					if(w.getX()+17>bullets.get(i2).getX()&&w.getX()<bullets.get(i2).getX()&&w.getY()+17>bullets.get(i2).getY()&&w.getY()<bullets.get(i2).getY()) {
+						exps.add(new Explosion(bullets.get(i2).getX(),bullets.get(i2).getY()));
 						bullets.get(i2).explode();
 						w.disappear();
 					}
 				}
 				for(int i1=0;i1<enemyTank.size();i1++) {
 					if(!bullets.get(i2).checkNo()&&bullets.get(i2).getIfMy()&&bullets.get(i2).getX()<enemyTank.get(i1).getX()+51&&bullets.get(i2).getX()>enemyTank.get(i1).getX()-17&&bullets.get(i2).getY()<enemyTank.get(i1).getY()+51&&bullets.get(i2).getY()>enemyTank.get(i1).getY()-17) {
+						exps.add(new Explosion(bullets.get(i2).getX(),bullets.get(i2).getY()));
 						bullets.get(i2).explode();
 						enemyTank.removeElementAt(i1);
 						//bullets.remove(b);
@@ -107,6 +111,7 @@ public class MyFrameTank extends JFrame {
 			//处理敌人炮弹
 			for(Bullet b:bullets) {
 				if(!b.checkNo()&&!b.getIfMy()&&b.getX()<myTank.getX()+51&&b.getX()>myTank.getX()-17&&b.getY()<myTank.getY()+51&&b.getY()>myTank.getY()-17) {
+					exps.add(new Explosion(myTank.getX(),myTank.getY()));
 					myTank.dead();
 					b.explode();
 					//System.exit(1);
@@ -161,6 +166,9 @@ public class MyFrameTank extends JFrame {
          	map.paint(gOffScreen);
          	if(!myTank.ifLife()) {
          		gOffScreen.drawImage(ConVal.IMG, ConVal.WEDTH/2, ConVal.HEIGHT/2,ConVal.WEDTH/2+136, ConVal.HEIGHT/2+68, 4*34, 4*34, 6*34, 5*34, null);
+         	}
+         	for(Explosion e:exps) {
+         		e.paint(gOffScreen);
          	}
         //将第二绘存中的内容一次性全部绘制到屏幕
         g.drawImage(offScreenImage, 0, 0, null);
