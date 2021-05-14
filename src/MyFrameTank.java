@@ -26,6 +26,7 @@ public class MyFrameTank extends JFrame {
     private Vector<Bullet> bullets=new Vector<Bullet>();
     private Map map;
     private Vector<Explosion> exps;
+    public ReBirth reBirth;
     //private Explosion exp;
     
     
@@ -36,7 +37,7 @@ public class MyFrameTank extends JFrame {
 		setSize(ConVal.WEDTH,ConVal.HEIGHT);//设置窗体的宽和高
 		
 		myTank = new PlayerTank(50,50,2,2,bullets); //0号坦克可以通过上下左右来控制
-		myTank.setV(8);
+		myTank.setV(16);
 		
 		map=new Map();
 		exps=new Vector<Explosion>();
@@ -52,10 +53,10 @@ public class MyFrameTank extends JFrame {
 		int shotTime=rd.nextInt(15);
 		//双方坦克移动
 		for(int i=0;;i++) {			
-			myTank.move();  //tank 0 moves
+			myTank.move(map);  //tank 0 moves
 			
 			for(SpiritTank tank:enemyTank) {
-				tank.randomMove();
+				tank.randomMove(map);
 			}
 			createTime++;
 			//敌人坦克发射炮弹
@@ -93,15 +94,15 @@ public class MyFrameTank extends JFrame {
 				//子弹爆炸
 				bullets.get(i2).move();
 				for(Wall w:map.getWalls()) {
-					if(w.getX()+17>bullets.get(i2).getX()&&w.getX()<bullets.get(i2).getX()&&w.getY()+17>bullets.get(i2).getY()&&w.getY()<bullets.get(i2).getY()) {
-						exps.add(new Explosion(bullets.get(i2).getX(),bullets.get(i2).getY()));
+					if(w.getX()-17<bullets.get(i2).getX()&&w.getX()+17>bullets.get(i2).getX()&&w.getY()+17>bullets.get(i2).getY()&&w.getY()-17<bullets.get(i2).getY()) {
+						exps.add(new Explosion(w.getX()+8,w.getY()+8));
 						bullets.get(i2).explode();
 						w.disappear();
 					}
 				}
 				for(int i1=0;i1<enemyTank.size();i1++) {
 					if(!bullets.get(i2).checkNo()&&bullets.get(i2).getIfMy()&&bullets.get(i2).getX()<enemyTank.get(i1).getX()+51&&bullets.get(i2).getX()>enemyTank.get(i1).getX()-17&&bullets.get(i2).getY()<enemyTank.get(i1).getY()+51&&bullets.get(i2).getY()>enemyTank.get(i1).getY()-17) {
-						exps.add(new Explosion(bullets.get(i2).getX(),bullets.get(i2).getY()));
+						exps.add(new Explosion(enemyTank.get(i1).getX()+17,enemyTank.get(i1).getY()+17));
 						bullets.get(i2).explode();
 						enemyTank.removeElementAt(i1);
 						//bullets.remove(b);
@@ -111,10 +112,13 @@ public class MyFrameTank extends JFrame {
 			//处理敌人炮弹
 			for(Bullet b:bullets) {
 				if(!b.checkNo()&&!b.getIfMy()&&b.getX()<myTank.getX()+51&&b.getX()>myTank.getX()-17&&b.getY()<myTank.getY()+51&&b.getY()>myTank.getY()-17) {
-					exps.add(new Explosion(myTank.getX(),myTank.getY()));
+					exps.add(new Explosion(myTank.getX()+17,myTank.getY()+17));
 					myTank.dead();
 					b.explode();
 					//System.exit(1);
+					reBirth=new ReBirth(myTank.getX()+17, myTank.getY()+17);
+					myTank.setX(10000);
+					myTank.setY(10000);
 				}
 			}
 			
@@ -155,7 +159,8 @@ public class MyFrameTank extends JFrame {
         
         
         //绘制所有游戏对象	      
-        	if(myTank.ifLife())myTank.paint(gOffScreen);  	
+        	//if(myTank.ifLife())
+        myTank.paint(gOffScreen);  	
         	//Iterator<Tank> it=enemyTank.iterator();
          	for(int j=0;j<enemyTank.size();j++) {
         		enemyTank.get(j).paint(gOffScreen);
@@ -164,11 +169,21 @@ public class MyFrameTank extends JFrame {
 				b.paint(gOffScreen);
 			}
          	map.paint(gOffScreen);
-         	if(!myTank.ifLife()) {
-         		gOffScreen.drawImage(ConVal.IMG, ConVal.WEDTH/2, ConVal.HEIGHT/2,ConVal.WEDTH/2+136, ConVal.HEIGHT/2+68, 4*34, 4*34, 6*34, 5*34, null);
-         	}
+         	//if(!myTank.ifLife()) {
+         	//	gOffScreen.drawImage(ConVal.IMG, ConVal.WEDTH/2, ConVal.HEIGHT/2,ConVal.WEDTH/2+136, ConVal.HEIGHT/2+68, 4*34, 4*34, 6*34, 5*34, null);
+         	//}
          	for(Explosion e:exps) {
          		e.paint(gOffScreen);
+         	}
+         	if(reBirth!=null) {
+         		reBirth.draw(gOffScreen);
+         		if(reBirth.isOver()) {
+         			myTank.setX(reBirth.getX()-17);
+         			myTank.setY(reBirth.getY()-17);
+         			reBirth=null;
+         			
+         			myTank.setDir(0);
+         		}
          	}
         //将第二绘存中的内容一次性全部绘制到屏幕
         g.drawImage(offScreenImage, 0, 0, null);

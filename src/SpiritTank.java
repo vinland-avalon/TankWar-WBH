@@ -22,9 +22,9 @@ public class SpiritTank extends Tank{
 		bullets=_bullets;
 	}
 
-	public void randomMove() 
+	public void randomMove(Map map) 
 	{ 
-		move();
+		move(map);
 		//System.out.println(getDir());
 		frameCount++;
 		if(frameCount%20==0) {

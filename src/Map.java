@@ -13,6 +13,7 @@ public class Map {
 			walls.add(new Wall(8,i));
 			walls.add(new Wall(ConVal.WEDTH-25,i));
 		}
+		
 	}
 	
 	public Vector<Wall> getWalls(){

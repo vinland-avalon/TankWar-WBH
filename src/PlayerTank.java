@@ -7,6 +7,7 @@ public class PlayerTank extends Tank implements KeyListener{
 	
 	private Vector<Bullet> bullets;
 	private Boolean life=true;
+	private int lives=5;
 
 	public PlayerTank(int _x,int _y,int _style,int _dir,Vector<Bullet> _bullets) {
 		super(_x, _y, _style, _dir);

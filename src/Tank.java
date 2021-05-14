@@ -69,9 +69,24 @@ public class Tank {
 	public int getV() {return v;}
 	
 	//移动，每次一格
-	public void move() 
+	public void move(Map map) 
 	{ 
-		
+		int tx=x,ty=y;
+		switch(dir) 
+		{
+			case 0: 
+				ty-=v; 
+				break;
+			case 1: tx+=v; break;
+			case 2: ty+=v; break;
+			case 3: tx-=v; break;
+		}
+		for(Wall wall:map.getWalls()) {
+			int wx=wall.getX(); int wy=wall.getY();
+			
+			if(wx<tx+34&&wx>tx-17&&wy>ty-17&&wy<ty+34) return;
+			
+		}
 		switch(dir) 
 		{
 			case 0: 
